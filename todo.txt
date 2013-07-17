@@ -1,0 +1,65 @@
+>>> BUG FIXES <<<
+* Fix the weird discoloration of cancelled events in week/day view
+* Fix errorcode 203 bug on checklogin.php
+
+
+>>> USABILITY IMPROVEMENTS <<<
+* Create intuitive, user-friendly event creation tools
+* Use JS to verify matching passwords in settings.php
+* Better information description on login.php
+
+
+>>> APPEARANCE IMPROVEMENTS <<<
+* The JS code in settings.php that restores the default colors to the jscolor thing needs to dynamically determine if the text color should be white or black
+* The login box on login.php is ugly, make it normal
+* Make the navbar tabs less bulky somehow
+* Make viewevent.php less bulky and awkward
+* Quit being lazy and rewrite new CSS for viewevent.php instead of reusing the qTip CSS
+* Set up the "Only show rehearsals for" feature on mastercal.php so that only the calendar gets refreshed, not the entire page
+* Clean up the sloppy use of the html h2 and h3 tags on downloads.php
+* Add a qTip to events that are pulled from the U.S. holidays Google Calendar on mastercal.php
+* Add printer-friendly CSS
+* Need to define more default styles for basic HTML tags and not rely on the user agent stylesheet
+* Make the page titles look less derpy (also, move #pagetitle inside of #pagebody)
+
+
+>>> ADDED FUNCTIONALITY <<<
+* Make an administrative control panel!
+* Come up with a versatile permissions system?
+* Make a news-events type thing for the home page instead of Google Docs, or maybe integrate wiki software
+* Make a mobile site after a module system is in place using iUI or something?
+* Make it more easily possible to change what navbar tabs are shown
+* Make a database for scenes (i.e. so they can have titles, and maybe even grouping scenes into acts)
+* Add internationalization support?
+* Make it possible to edit extra_roles via viewevent.php (use jQuery UI's autocomplete thing! :D)
+* Add a reset password button
+
+
+>>> BETTER CODING <<
+* Switch from manually escaped MySQL statements to using an abstraction layer (probably mysqli, but I could write it so it supports multiple)<
+* Rename all global variables in psm_config.php to begin with $psm
+* Split config.php into a new file called includes.php, and change all pages to require_once includes.php instead of config.php
+* Make pages into a module system of some sort to make the creation of a mobile site easier
+* Make the errormsg thingy I use on login.php and settings.php into a function so that it's more dynamic
+* Come up with a dynamic solution to the "Chorus" problem (i.e. that it shouldn't be displayed on the roles list)
+* Get rid of the crap that lets new people set their password for the first time via login.php (or maybe don't, but have it as a feature!)
+* Make the question mark icons on viewevent.php work dynamically (instead of being a copy-pasted img tag)
+* Consider making eventsfeed.php use the JSON extension of PHP rather than manually generating JSON
+* Manually deal with session storing instead of just coasting by on the defaults
+* Deal with timezones (done??)
+* Remove the need for the scene 0 workaround!
+* Get rid of or else improve the implementation of user themes
+* If anyone connects to the website via a different address than $siteaddr, 301-redirect them to the correct website address
+
+
+
+
+>>> COMPLETED TASKS <<<
+* In settings.php, make the left sidebar use JS instead of CSS selectors for the hover colors and remove the <a>s
+* Eliminate the need for a submit button on the "Only show rehearsals for" feature on mastercal.php
+* Set "appearance:none;" and all the browser-specific versions for the jscolor input boxes on settings.php
+* Make the #pageheader section less derpy
+* Move the page titles closer to the page content box so they're more noticeable
+* Add a date and time picker for viewevent.php
+* Set up tab index on the login box that is in the page header (I think I did this, need to verify in Chrome)
+* Easy login via IMAP authentication
