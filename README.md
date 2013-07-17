@@ -1,6 +1,5 @@
 # phpStageManager
 
-
 A web-based theatre management utility.
 
 Requires a PHP-enabled web server and a MySQL server
