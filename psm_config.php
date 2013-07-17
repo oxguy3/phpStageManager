@@ -1,6 +1,5 @@
 <?php
 
-//NOTE: These values will be overridden by the database!
 $sitetitle = "phpStageManager"; //name of website to appear everywhere
 $sitedescription = "A web-based theatre management utility"; //a description of the site
 $companyname = "Hayden Schiff"; //name of company to appear in misc places
@@ -20,7 +19,7 @@ $sql_pass = 'pass'; //password for MySQL server
 $sql_db = 'phpstagemanager'; //database to use on the MySQL server
 $sql_pref = 'psm_'; //prefix to use for MySQL table names
 
-$def_backcolor = '#0000AA';//'#A8516E'; //default background color
+$def_backcolor = '#0000AA'; //default background color
 $def_forecolor = '#FFDD00'; //default foreground color
 $def_forehcolor = '#FFAA00'; //default foreground-hover color
 
