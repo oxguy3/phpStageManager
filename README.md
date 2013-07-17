@@ -2,9 +2,9 @@
 
 A web-based theatre management utility.
 
-Requires a PHP-enabled web server and a MySQL server
+Requires a web server with PHP 5.x (with MySQL extension) and a MySQL server
 
-Uses [Fatcow's 3500 Free "Farm-Fresh Web Icons"](http://www.fatcow.com/free-icons)
+Uses [jQuery](http://jquery.com/), [jQuery UI](http://jqueryui.com/) (with Smoothness theme), [FullCalendar](http://arshaw.com/fullcalendar/), [JSColor](http://jscolor.com/), [Fatcow's 3500 Free "Farm-Fresh Web Icons"](http://www.fatcow.com/free-icons)
 
 ## Installation
 
