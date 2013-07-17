@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `psm_events` (
   `status` tinyint(4) NOT NULL COMMENT '1=tentative, 2=confirmed, 3=cancelled',
   `other_roles` tinytext NOT NULL COMMENT 'IDs of roles being called that are not already included by the scenes',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='stores calendar events' AUTO_INCREMENT=86 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='stores calendar events' ;
 
 CREATE TABLE IF NOT EXISTS `psm_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `psm_roles` (
   `showInDirectory` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'should role be visible on the contact sheet?',
   `showInCalDropdown` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'should role be visible in the calendar''s roles dropdown?',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='stores roles (actors/whatever)' AUTO_INCREMENT=62 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='stores roles (actors/whatever)' ;
 
 CREATE TABLE IF NOT EXISTS `psm_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -49,7 +49,10 @@ CREATE TABLE IF NOT EXISTS `psm_users` (
   PRIMARY KEY (`id`),
   FULLTEXT KEY `username` (`username`),
   FULLTEXT KEY `lastname` (`lastname`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='stores people' AUTO_INCREMENT=35 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='stores people' ;
+
+INSERT INTO `psm_users` (`id`, `username`, `password`, `permission`, `firstname`, `lastname`, `roles`, `phone_mobile`, `phone_home`, `email`, `theme`) VALUES (NULL, 'admin', 'stinger', '2', 'Admin', '', '', '', '', '', '@');
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
