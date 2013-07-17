@@ -1,11 +1,13 @@
+# phpStageManager
+
+
 A web-based theatre management utility.
 
 Requires a PHP-enabled web server and a MySQL server
 
 Uses [Fatcow's 3500 Free "Farm-Fresh Web Icons"](http://www.fatcow.com/free-icons)
 
-Installation
-============
+## Installation
 
 phpStageManager currently lacks an automatic installation script; however, it is still possible to install without too much trouble.
 
@@ -16,6 +18,6 @@ phpStageManager currently lacks an automatic installation script; however, it is
 
 That should be all, happy stage managing!
 
-Usage
-=====
+## Usage
+
 Coming soon!
