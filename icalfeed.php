@@ -8,7 +8,7 @@ $link = startmysql();
 $sql = "SELECT * FROM `" . $sql_pref . "events`";//" LIMIT 0, 1000 "; //1000 event limit, so that nothing explodes
 $result = mysql_query($sql) or die("Query failed:\n" . mysql_error());
 
-header('Content-type: text/plain'); //should be text/calendar
+header('Content-type: text/calendar');
 
 //action_log("iCalendar accessed, user agent: " . $_SERVER['HTTP_USER_AGENT']);
 
