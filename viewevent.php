@@ -127,11 +127,13 @@ if (!isset($_SESSION['user']) || intval($_SESSION['permission'])<1) {
 	height: 100px;
 }
 </style>-->
-<script type='text/javascript' src='<?php echo $siteaddr; ?>/includes/jquery-1.5.2.min.js'></script>
+<script type='text/javascript' src='<?php echo $siteaddr; ?>/includes/jquery-1.7.2.min.js'></script>
 <script type='text/javascript' src='<?php echo $siteaddr; ?>/includes/jquery-ui-1.8.17.js'></script>
 <script type='text/javascript' src='<?php echo $siteaddr; ?>/includes/jquery.qtip-1.0.0-rc3.min.js'></script>
+<script type='text/javascript' src='<?php echo $siteaddr; ?>/includes/mobiscroll-2.0.1.custom.min.js'></script>
 <script type='text/javascript' src='<?php echo $siteaddr; ?>/includes/play-viewevent.js.php'></script>
 <link rel="stylesheet" type="text/css" href="<?php echo $siteaddr; ?>/includes/smoothness/jquery-ui-1.8.18.custom.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo $siteaddr; ?>/includes/mobiscroll-2.0.1.custom.min.css" />
 <?php
 
 require_once('header.php');
@@ -256,13 +258,13 @@ if ($errorcode==0) {
 <tr>
 	<td><div class="event-qtip-start"><span class="event-qtip-label">Start:</span> <?php echo date('D M j, Y', strtotime($row[4])); 
 		?> at <?php echo date('g:i A', strtotime($row[4])); ?></div></td>
-	<td class="eventeditbox-td"><input type="text" name="ev-dtstart" value="<?php echo $row[4]; 
+	<td class="eventeditbox-td"><input type="text" id="input-ev-dtstart" name="ev-dtstart" value="<?php echo $row[4]; 
 		?>">&nbsp;<img id="helptip-editdtstart" src="<?php echo $siteaddr; ?>/images/question_icon.gif" alt="(?)"></td>
 </tr>
 <tr>
 	<td><div class="event-qtip-end"><span class="event-qtip-label">End:</span> <?php echo date('D M j, Y', strtotime($row[5])); 
 		?> at <?php echo date('g:i A', strtotime($row[5])); ?></div></td>
-	<td class="eventeditbox-td"><input type="text" name="ev-dtend" value="<?php echo $row[5]; 
+	<td class="eventeditbox-td"><input type="text" id="input-ev-dtend" name="ev-dtend" value="<?php echo $row[5]; 
 		?>">&nbsp;<img id="helptip-editdtend" src="<?php echo $siteaddr; ?>/images/question_icon.gif" alt="(?)"></td>
 </tr>
 <tr>

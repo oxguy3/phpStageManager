@@ -91,7 +91,7 @@ if (!isset($_SESSION['user'])) {
 </form>
 </tr>
 </table>
-<div style="margin-left:315px; padding:20px 7px 50px 20px;">Please enter your login information. If you forget your password, ask Hayden and he can reset it. If you have never set a password on this site, you can login using your school username and password.</div>
+<div style="margin-left:315px; padding:20px 7px 50px 20px;">Please enter your login information. If you forget your password, ask the website administrator to reset it. If you have never set a password on this site, you can login using your school username and password.</div>
 <?php //'
 
 } else {
