@@ -311,13 +311,19 @@ ul.navbar a:link, ul.navbar a:visited
     border-top-right-radius: 8px;
     font-family: Verdana, Geneva, sans-serif;
 }
-ul.navbar a:hover, ul.navbar a:active
+ul.navbar a:hover, ul.navbar a:active, #navbar-selected
 {
     background-color: <?php echo $forehcolor; ?>;
 }
-#navbar-selected
+
+ul.navbar a.adminlink:link, ul.navbar a.adminlink:visited
 {
-    background-color: <?php echo $forehcolor; ?>;
+    color: #ffffff ! important;
+    background-color: #cc0000 ! important;
+}
+ul.navbar a.adminlink:hover, ul.navbar a.adminlink:active, .adminlink#navbar-selected
+{
+    background-color: #990000 ! important;
 }
 
 
@@ -404,11 +410,17 @@ ul.navbar a:hover, ul.navbar a:active
     background-color: #ffffff;
 }
 
+.contactsheet-edit a
+{
+    text-decoration:none;
+}
 .contactsheet-edit-button
 {
 	background-image: url(<?php echo $siteaddr; ?>/images/fatcow/pencil.png);
+    background-repeat: no-repeat;
 	min-width: 16px;
 	min-height: 16px;
+    text-decoration: none;
 }
 
 

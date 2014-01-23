@@ -22,7 +22,7 @@ require_once('header.php');
 <table id="contactsheet" class="mydatatable">
 <tr>
 <!--<th id="contactsheet-callink" style="min-width:16px" title="Link to this person's calendar"></th>-->
-<th id="contactsheet-edit" style="min-width:16px;">&nbsp;</th>
+<?php if (intval($_SESSION['permission'])>=2) { ?><th id="contactsheet-edit" style="min-width:16px;">&nbsp;</th><?php } ?>
 <th id="contactsheet-name" style="width:20%;/*26%*/">Name</th>
 <th id="contactsheet-roles" style="width:24%;/*18%*/">Roles</th>
 <th id="contactsheet-mobilephone" style="width:15%;">Mobile Phone</th>
@@ -50,13 +50,13 @@ require_once('header.php');
 		}
 		
 		echo "<tr class=\"contactsheet-row-" . $rowshading . "\">" . $br;
-		
-		echo "<td class=\"contactsheet-edit\">";
-		if (false) {
-			echo '<div class="contactsheet-edit-button" title="Edit this user"></div>';
+        
+		if (intval($_SESSION['permission'])>=2) {
+            echo "<td class=\"contactsheet-edit\">";
+			echo '<a href="edituser.php?id=' . $row[0] . '"><div class="contactsheet-edit-button" title="Edit this user">&nbsp;</div></a>';
+            echo "</td>";
 		}
-		echo "</td>";
-		
+        
 		echo "<td class=\"contactsheet-name\">" . $row[4] . " " . $row[5] . "</td>" . $br;
 		
 		echo "<td class=\"contactsheet-roles\">";

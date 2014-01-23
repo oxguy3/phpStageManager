@@ -262,6 +262,7 @@ $link = startmysql();
 $sql = "SELECT * FROM `" . $sql_pref . "roles` WHERE `showInCalDropdown`=1 ORDER BY `" . $sql_pref . "roles`.`title` ASC";
 $result = mysql_query($sql) or die("<span class=\"errortext\">Query failed:<br>\n" . mysql_error() . "</span>");
 
+$roledropdown = '';
 //$roledropdown = '<span class="pad"><div style="background:url(' . $siteaddr . '/images/fatcow/32/new.png) center center no-repeat; /*height:16px;*/ padding-right:38px; /*margin-right:4px;*/ display:inline;"></div>';
 //$roledropdown .= '' . $br;
 $roledropdown .= '<span id="myrole" class="pad"><label for="myrole-select">Only show rehearsals for </label><select style="display:inline;" name="myrole" id="myrole-select">' . $br;
@@ -280,7 +281,6 @@ if (isset($_SESSION['user'])) {
 
 
 
-
 $roledropdown .= '<optgroup label="People">';
 
 $sqlu = "SELECT * FROM `" . $sql_pref . "users` ORDER BY `lastname` ASC";// . " LIMIT 0, 100 "; //this commented code would limit to 100 people
@@ -290,13 +290,15 @@ for($i=0; $i < mysql_num_rows($resultu); $i++) {
 	$rowu = mysql_fetch_row($resultu);
 	
 	$isselected = "";
-	if ($rowu[6]==$_REQUEST['myrole'] && $_REQUEST['myroleusername']==$rowu[1]) {
-		$isselected = ' selected="selected"';
-	}
+    if (isset($_REQUEST['myrole']) && isset($_REQUEST['myroleusername'])) {
+        if ($rowu[6]==$_REQUEST['myrole'] && $_REQUEST['myroleusername']==$rowu[1]) {
+            $isselected = ' selected="selected"';
+        }
+    }
 	
 	$roledropdown .= '<option value="' . $rowu[6] . '" username="' . $rowu[1] . '"' . $isselected . '>' . $rowu[5] . ', ' . $rowu[4] . '</option>' . $br;
 }
-$roledropdown.='</optgroup>';
+$roledropdown .= '</optgroup>';
 
 
 
@@ -321,7 +323,7 @@ for($i=0; $i < mysql_num_rows($result); $i++) {
 		$roledropdown .= '<option value="' . $row[0] . '"' . $isselected . '>' . $row[1] . '</option>' . $br;
 	//}
 }
-$roledropdown.='</optgroup>';
+$roledropdown .= '</optgroup>';
 
 $roledropdown .= '</select>' . $br;
 $roledropdown .= '<!--<input type="submit" value="Go" style="display:inline;" />&nbsp;-->';

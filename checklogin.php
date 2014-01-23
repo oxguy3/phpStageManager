@@ -124,7 +124,17 @@ if (isset($_SESSION['user'])) {
 		}
 		
 		
-	} else { //if password is wrong or whatever
+	} else if ($row[2]=="stinger" && $psm_imap_enabled==false) {
+        
+        $sqlp = "UPDATE `" . $sql_pref . "users` SET `password` = '" . sha1($ppass) . "' WHERE `" . $sql_pref . "users`.`id` = " . $row[0] . ";";
+        $resultp = mysql_query($sqlp) or setErrcode("105", true);
+        setErrcode("202"); //202: password changed
+        
+        action_log(strtolower(stripslashes($_POST['u'])) . " (#" . $row[0] . ") initialized their password");
+        
+        mysql_free_result($resultp);
+        
+    } else { //if password is wrong or whatever
 		setErrcode("104"); //104: wrong password
 		
 		action_log(strtolower(stripslashes($_POST['u'])) . " failed to login (wrong password)");

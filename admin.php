@@ -172,7 +172,7 @@ unset($_SESSION['errcode'], $_SESSION['errnote']);
 	<td class="settings-table-label"><label for="settings-users-create-permission">Permission</label></td>
 	<td class="settings-table-edit"><select name="permission" id="settings-users-create-permission">
 		<option value="0">Default</option>
-		<option value="1">Power user</option>
+		<option value="1">Power user (can edit events)</option>
 		<option value="2">Administrator</option>
 	</select></td>
 </tr>
@@ -207,13 +207,16 @@ unset($_SESSION['errcode'], $_SESSION['errnote']);
 <div class="settings-section-header">Edit an existing user</div>
 <table class="settings-table"><tbody>
 <tr>
+    <td>To modify or delete an existing user, click the pencil next to their name in <a href="<?php echo $siteaddr; ?>/contactsheet.php">the directory</a>.</td>
+<tr>
+<?php /*<tr>
 	<td class="settings-table-label"><label for="settings-users-edit-bluhbluhbluh">Bluhbluhbluh</label></td>
 	<td class="settings-table-edit"><input type="text" name="bluhbluhbluh" id="settings-users-edit-bluhbluhbluh"></input></td>
 </tr>
 <tr>
 	<td class="settings-table-label"></td>
 	<td class="settings-table-edit settings-table-submit"><input type="submit" value="Submit"></input></td>
-</tr>
+</tr>*/ ?>
 </tbody></table></form>
 </div>
 
@@ -253,11 +256,11 @@ unset($_SESSION['errcode'], $_SESSION['errnote']);
 	<td class="settings-table-edit"><input type="checkbox" name="imapenabled" id="settings-security-loginauth-imapenabled"<?php if($psm_imap_enabled){echo " checked";} ?>></input></td>
 </tr>
 <tr>
-	<td class="settings-table-label"><label for="settings-security-loginauth-imapaddress">IMAP address</label></td>
+	<td class="settings-table-label"><label for="settings-security-loginauth-imapaddress">IMAP server address</label></td>
 	<td class="settings-table-edit"><input type="text" name="imapaddress" id="settings-security-loginauth-imapaddress" value="<?php echo $psm_imap_address; ?>"></input></td>
 </tr>
 <tr>
-	<td class="settings-table-label"><label for="settings-security-loginauth-imapusessl">Use SSL with IMAP? (unimplemented)</label></td>
+	<td class="settings-table-label"><label for="settings-security-loginauth-imapusessl">Use SSL with IMAP? (toggle not yet functional)</label></td>
 	<td class="settings-table-edit"><input type="checkbox" name="imapusessl" id="settings-security-loginauth-imapusessl"<?php if($psm_imap_usessl){echo " checked";} ?>></input></td>
 </tr>
 <tr>

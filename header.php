@@ -84,7 +84,13 @@ function highlightSelTab($tabname) {
 	<li><a href="<?php echo $siteaddr; ?>/mastercal.php"<?php highlightSelTab("/mastercal.php")?>>Calendar</a></li>
 	<li><a href="<?php echo $siteaddr; ?>/contactsheet.php"<?php highlightSelTab("/contactsheet.php")?>>Directory</a></li>
 	<li><a href="<?php echo $siteaddr; ?>/scenebreakdown.php"<?php highlightSelTab("/scenebreakdown.php")?>>Scenes</a></li>
-	<!--<li><a href="<?php echo $siteaddr; ?>/downloads.php"<?php highlightSelTab("/downloads.php")?>>Downloads</a></li>-->
+    <?php
+    if (isset($_SESSION['permission'])&&$_SESSION['permission']>1) {
+    ?>
+	<li><a class="adminlink" href="<?php echo $siteaddr; ?>/admin.php"<?php highlightSelTab("/admin.php")?>>Admin</a></li>
+    <?php
+    }
+    ?>
 </ul>
 </div>
 </div>

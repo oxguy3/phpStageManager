@@ -12,6 +12,11 @@ $rootdir = "/"; //internal server directory of this site
 
 $scenecount = 30; //number of scenes in the show
 
+//URL of the page to be embedded on the website's home page
+$psm_homepage_url = "https://docs.google.com/document/pub?id=YOUR-DOCUMENT-ID-HERE&embedded=true";
+//HTML to be shown at the bottom of the home page
+$psm_homepage_subtext = "You can edit the announcements via <a href=\"https://docs.google.com/document/d/YOUR-DOCUMENT-ID-HERE/edit\">this Google Doc</a>.";
+
 
 $sql_addr = 'localhost'; //address of MySQL server
 $sql_user = 'root'; //username for MySQL server
