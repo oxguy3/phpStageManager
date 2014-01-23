@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `psm_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` tinytext NOT NULL,
   `password` tinytext NOT NULL,
-  `permission` int(11) NOT NULL COMMENT '0=normal,1=edit events, 2=admin',
+  `permission` int(11) NOT NULL COMMENT '0=normal, 1=edit events, 2=admin',
   `firstname` tinytext NOT NULL,
   `lastname` tinytext NOT NULL,
   `roles` tinytext NOT NULL,
