@@ -66,6 +66,11 @@ getThemeColors();
     text-decoration:underline;
 }
 
+.settings-table
+{
+    margin-bottom: 14px;
+}
+
 .settings-table-label
 {
     width: 225px;

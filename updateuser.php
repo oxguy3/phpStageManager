@@ -3,23 +3,61 @@ require_once('config.php');
 
 //header('Content-type: text/plain'); ////NOTE: REMOVE WHEN DONE TESTING -- WE DON'T NEED NO STINKIN' HEADERS!!
 
+function setErrcode($errcode, $scriptname, $dienow=false) {
+	global $siteaddr;
+	$_SESSION['errcode']=$errcode;
+	header("Location: " . $siteaddr . "/" . $scriptname . ".php");
+	if ($dienow==true) {
+        if (isset($link)) {
+            mysql_close($link);
+        }
+		die();
+	}
+}
 
-/*if (!isset($_SESSION['user'])) {
-	die("You must be logged in to do that.");
-}*/
 mustBeLoggedIn();
 if (intval($_SESSION['permission']) < 2) {
 	die("You don't have permission to do that.");
 }
 
+$logtext = $_SESSION['user'] . " (#" . $_SESSION['id'] . ") ";
+
 $link = startmysql();
 
 
-////////////////////////////////////////////////////////////////////////
-//// IMPORTANT:
-//// Should I deal with scenarios where not all variables are set?
-//// a:NOPE, just kill them with fire
-////////////////////////////////////////////////////////////////////////
+if (isset($_POST['u-resetpass']) && $_POST['u-resetpass']=="true") {
+    
+	if (!isset($_POST['u-username'])) {
+        $_SESSION['errnote'] = "username";
+        setErrcode("101", "admin", true);
+	}
+	$usernamep = $_POST['u-username'];
+    
+	if (strip_tags($usernamep)!=$usernamep) {
+        $_SESSION['errnote'] = "username";
+        setErrcode("103", "admin", true);
+	}
+	$usernamecl = mysql_real_escape_string(strip_tags($usernamep));
+    
+    
+    $sqlGetUser = "SELECT * FROM `" . $sql_pref . "users` WHERE `username`='" . $usernamecl . "'";
+    $resultGetUser = mysql_query($sqlGetUser) or setErrcode("106", "admin", true);
+    
+    if (mysql_num_rows($resultGetUser) <= 0) {
+        mysql_close($link);
+        setErrcode("104", "admin", true);
+    }
+    
+    $sqlResetPass = "UPDATE `" . $sql_pref . "users` SET `password`='stinger' WHERE `username`='" . $usernamecl . "'";
+    $resultResetPass = mysql_query($sqlResetPass) or setErrcode("106", "admin", true);
+    
+    setErrcode("202", "admin");
+    
+    $logtext .= " reset " . $usernamecl . "'s password.";
+    action_log($logtext);
+    mysql_close($link);
+    die();
+}
 
 
 if (!isset($_POST['u-id'])) {
@@ -38,159 +76,112 @@ if ($uidp!="new") {
 	if (strpos(".", $uidp)!=false||strpos("+", $uidp)!=false||strpos("-", $uidp)!=false||strpos("e", $uidp)!=false) { //i feel like SUCH a lazy programmer :P
 		die("Your user ID contains an invalid character.");
 	}
-	$uidp = mysql_real_escape_string($uidp);
+	$uidcl = mysql_real_escape_string($uidp);
 }
 
 if (!isset($_POST['u-delete'])) {
-	
-	if (!isset($_POST['ev-scenes'])) {
-		die("You did not specify a scenes parameter; all parameters are required.");
+    
+    
+	if (!isset($_POST['u-username'])) {
+        $_SESSION['errnote'] = "username";
+        setErrcode("101", "contactsheet", true);
 	}
-	$scenesp = $_POST['ev-scenes'];
-	
-	if (mysql_real_escape_string($scenesp)!=$scenesp) {
-		die("Your scenes parameter contains invalid characters.");
+	$usernamep = $_POST['u-username'];
+    
+	if (strip_tags($usernamep)!=$usernamep) {
+        $_SESSION['errnote'] = "username";
+        setErrcode("103", "contactsheet", true);
 	}
-	/*if (preg_replace('#([^0-9,])#imx', '', $scenesp)!=$scenesp) { ////from http://stackoverflow.com/a/2788781/992504
-	//(preg_match_all("#[0-9]+[,]{1}#", $scenesp, $trash)!=count($scenesp)) {
-		die("Your scenes were not formatted correctly. Correct format: \"4,5,6,10,13\"");
+	$usernamecl = mysql_real_escape_string(strip_tags($usernamep));
+	
+	
+	
+	
+	if (!isset($_POST['u-permission'])) {
+        $_SESSION['errnote'] = "permission level";
+        setErrcode("101", "contactsheet", true);
 	}
-	if (strpos(",,", $evidp)!=false) {
-		die("You have two commas next to each other in your scenes parameter.");
+	$permissionp = $_POST['u-permission'];
+	if ($permissionp!="0" && $permissionp!="1" && $permissionp!="2") {
+        $_SESSION['errnote'] = "permission level";
+        setErrcode("102", "contactsheet", true);
 	}
-	if (implode(",", explode(",", $scenesp))!=$scenesp) { //lol doubt this ever returns false, but i feel safer when i densify my sphere of idiocy
-		die("Your scenes parameter was changed after being exploded and imploded.");
-	}*/
-	$scenespex = explode(",", $scenesp);
-	for ($sc = 0; $sc < count($scenespex); $sc++) {
-		if (preg_replace('#([^0-9])#imx', '', $scenespex[$sc])!=$scenespex[$sc]) { ////from http://stackoverflow.com/a/2788781/992504
-			die("Invalid scene: " . $scenespex[$sc]);
-		}
-		if (intval($scenespex[$sc]) > $scenecount || intval($scenespex[$sc]) < 0) {
-			die("Scene out of range: " . $scenespex[$sc]);
-		}
+	$permissioncl = mysql_real_escape_string($permissionp);
+    
+    
+    
+    
+	if (!isset($_POST['u-firstname'])) {
+        $_SESSION['errnote'] = "first name";
+        setErrcode("101", "contactsheet", true);
 	}
-	$scenescl = mysql_real_escape_string($scenesp);
-	
-	
-	
-	
-	if (!isset($_POST['ev-dtstart'])) {
-		die("You did not specify a start time; all parameters are required.");
+	$firstnamep = $_POST['u-firstname'];
+    
+	if (strip_tags($firstnamep)!=$firstnamep) {
+        $_SESSION['errnote'] = "first name";
+        setErrcode("103", "contactsheet", true);
 	}
-	$dtstartp = $_POST['ev-dtstart'];
-	
-	if (mysql_real_escape_string($dtstartp)!=$dtstartp) {
-		die("Your start time contains invalid characters.");
+	$firstnamecl = mysql_real_escape_string(strip_tags($firstnamep));
+    
+    
+    
+    
+	if (!isset($_POST['u-lastname'])) {
+        $_SESSION['errnote'] = "last name";
+        setErrcode("101", "contactsheet", true);
 	}
-	if (date("Y-m-d H:i:s", strtotime($dtstartp))!=$dtstartp) {
-		die("Your start time was not properly formatted. Correct format: \"1999-12-31 23:59:59\"");
+	$lastnamep = $_POST['u-lastname'];
+    
+	if (strip_tags($lastnamep)!=$lastnamep) {
+        $_SESSION['errnote'] = "last name";
+        setErrcode("103", "contactsheet", true);
 	}
-	$dtstartobj = date_create($dtstartp, $psm_deftimezone_obj);
-	date_timezone_set($dtstartobj, timezone_open('UTC'));
-	$dtstartcl = mysql_real_escape_string(date_format($dtstartobj, 'Y-m-d H:i:s'));
-	
-	
-	
-	
-	if (!isset($_POST['ev-dtend'])) {
-		die("You did not specify an end time; all parameters are required.");
+	$lastnamecl = mysql_real_escape_string(strip_tags($lastnamep));
+    
+    
+    
+    
+	if (!isset($_POST['u-mobilephone'])) {
+        $_SESSION['errnote'] = "mobile phone";
+        setErrcode("101", "contactsheet", true);
 	}
-	$dtendp = $_POST['ev-dtend'];
-	
-	if (mysql_real_escape_string($dtendp)!=$dtendp) {
-		die("Your end time contains invalid characters.");
+	$mobilephonep = $_POST['u-mobilephone'];
+    
+	if (strip_tags($mobilephonep)!=$mobilephonep) {
+        $_SESSION['errnote'] = "mobile phone";
+        setErrcode("103", "contactsheet", true);
 	}
-	if (date("Y-m-d H:i:s", strtotime($dtendp))!=$dtendp) {
-		die("Your end time was not properly formatted. Correct format: \"1999-12-31 23:59:59\"");
+	$mobilephonecl = mysql_real_escape_string(strip_tags($mobilephonep));
+    
+    
+    
+    
+	if (!isset($_POST['u-homephone'])) {
+        $_SESSION['errnote'] = "home phone";
+        setErrcode("101", "contactsheet", true);
 	}
-	$dtendobj = date_create($dtendp, $psm_deftimezone_obj);
-	date_timezone_set($dtendobj, timezone_open('UTC'));
-	$dtendcl = mysql_real_escape_string(date_format($dtendobj, 'Y-m-d H:i:s'));
-	
-	
-	
-	
-	if (!isset($_POST['ev-comments'])) {
-		die("You did not specify comments; all parameters are required.");
+	$homephonep = $_POST['u-homephone'];
+    
+	if (strip_tags($homephonep)!=$homephonep) {
+        $_SESSION['errnote'] = "home phone";
+        setErrcode("103", "contactsheet", true);
 	}
-	$commentsp = $_POST['ev-comments'];
-	
-	/*if (mysql_real_escape_string($commentsp)!=$commentsp) {
-		die("Your comments contain invalid characters.");
-	}*/
-	if (strip_tags($commentsp)!=$commentsp) {
-		die("Your comments contain markup tags, which are not allowed.");
+	$homephonecl = mysql_real_escape_string(strip_tags($homephonep));
+    
+    
+    
+    
+	if (!isset($_POST['u-emailaddr'])) {
+        $_SESSION['errnote'] = "emailaddr";
+        setErrcode("101", "contactsheet", true);
 	}
-	$commentscl = mysql_real_escape_string(strip_tags($commentsp));
-	
-	
-	
-	
-	if (!isset($_POST['ev-loc'])) {
-		die("You did not specify a location; all parameters are required.");
+	$emailaddrp = $_POST['u-emailaddr'];
+    
+	if (strip_tags($emailaddrp)!=$emailaddrp) {
+        $_SESSION['errnote'] = "emailaddr";
+        setErrcode("103", "contactsheet", true);
 	}
-	$locp = $_POST['ev-loc'];
-	
-	/*if (mysql_real_escape_string($locp)!=$locp) {
-		die("The location you specified contains invalid characters.");
-	}*/
-	if (strip_tags($locp)!=$locp) {
-		die("The location you specified contains markup tags, which are not allowed.");
-	}
-	$loccl = mysql_real_escape_string(strip_tags($locp));
-	
-	
-	
-	
-	if (!isset($_POST['ev-title'])) {
-		die("You did not specify a title; all parameters are required.");
-	}
-	$titlep = $_POST['ev-title'];
-	
-	/*if (mysql_real_escape_string($titlep)!=$titlep) {
-		die("The location you specified contains invalid characters.");
-	}*/
-	if (strip_tags($titlep)!=$titlep) {
-		die("The title you specified contains markup tags, which are not allowed.");
-	}
-	$titlecl = mysql_real_escape_string(strip_tags($titlep));
-	
-	
-	
-	
-	if (!isset($_POST['ev-status'])) {
-		die("You did not specify a status; all parameters are required.");
-	}
-	$statusp = $_POST['ev-status'];
-	if ($statusp!="1" && $statusp!="2" && $statusp!="3") {
-		die("The status you specified is invalid.");
-	}
-	$statuscl = mysql_real_escape_string($statusp); //do i REALLY need to escape this string? i mean like srsly dawg
-	
-	
-	
-	
-	if (!isset($_POST['ev-showscenes'])) {
-		die("You did not specify showscenes; all parameters are required.");
-	}
-	$showscenesp = $_POST['ev-showscenes'];
-	if ($showscenesp!="0" && $showscenesp!="1") {
-		die("The showscenes parameter you specified is invalid.");
-	}
-	$showscenescl = mysql_real_escape_string($showscenesp); //do i REALLY need to escape this string? i mean like srsly dawg
-	
-	
-	
-	
-	if (!isset($_POST['ev-allday'])) {
-		die("You did not specify the allday parameter; all parameters are required.");
-	}
-	$alldayp = $_POST['ev-allday'];
-	if ($alldayp!="0" && $alldayp!="1") {
-		die("The allday parameter you specified is invalid.");
-	}
-	$alldaycl = mysql_real_escape_string($alldayp); //do i REALLY need to escape this string? i mean like srsly dawg
+	$emailaddrcl = mysql_real_escape_string(strip_tags($emailaddrp));
 	
 	
 } else {
@@ -209,10 +200,10 @@ if (isset($_POST['u-delete'])) {
 	$sql = "DELETE FROM `" . $sql_pref . "users` WHERE `id` = " . $uidcl  . ";";
 	
 } else if ($uidp!="new") {
-	$sql = "UPDATE `" . $sql_pref . "events` SET `title` = '" . $titlecl . "', `loc` = '" . $loccl . "', `dtstamp` = CURRENT_TIMESTAMP, `dtstart` = '" . $dtstartcl . "', `dtend` = '" . $dtendcl . "', `userid` = '" . $_SESSION['id'] . "', `comments` = '" . $commentscl . "', `scenes` = '" . $scenescl . "', `allday` = '" . $alldaycl . "', `showscenes` = '" . $showscenescl . "', `status` = '" . $statuscl . "' WHERE `" . $sql_pref . "events`.`id` = " . $uidcl  . ";";
+	$sql = "UPDATE `" . $sql_pref . "users` SET `username` = '" . $usernamecl . "', `permission` = " . $permissioncl . ", `firstname` = '" . $firstnamecl . "', `lastname` = '" . $lastnamecl . "', `phone_mobile` = '" . $mobilephonecl . "', `phone_home` = '" . $homephonecl . "', `email` = '" . $emailaddrcl . "' WHERE `id` = " . $uidcl  . ";";
 	
 } else {
-	$sql = "INSERT INTO `" . $sql_pref . "events` (`title`, `id`, `loc`, `dtstamp`, `dtstart`, `dtend`, `userid`, `comments`, `scenes`, `allday`, `showscenes`, `status`, `other_roles`) VALUES ('" . $titlecl . "', NULL, '" . $loccl . "', CURRENT_TIMESTAMP, '" . $dtstartcl . "', '" . $dtendcl . "', '" . $_SESSION['id'] . "', '" . $commentscl . "', '" . $scenescl . "', '" . $alldaycl . "', '" . $showscenescl . "', '" . $statuscl . "', '0');";
+	$sql = "INSERT INTO `" . $sql_pref . "events` (`username`, `permission`, `firstname`, `lastname`, `mobilephone`, `homephone`, `emailaddr`, `theme`) VALUES ('');";
 	
 }
 
@@ -226,17 +217,17 @@ mysql_close($link);
 header("Location: " . $siteaddr . "/mastercal.php");
 
 
-$logtext = $_SESSION['user'] . " (#" . $_SESSION['id'] . ") ";
+
 if (isset($_POST['u-delete'])) {
 	$logtext .= "deleted user #" . $uidcl;
 	
 } else {
 	if ($uidp=="new") {
-		$logtext .= "created a new event";
+		$logtext .= "created a new user";
 	} else {
-		$logtext .= "edited event #" . $uidcl;
+		$logtext .= "edited user #" . $uidcl;
 	}
-	$logtext .=".  TITLE:\"" . $titlecl . "\"  LOC:\"" . $loccl . "\"  DTSTART:\"" . $dtstartcl . "\"  DTEND:\"" . $dtendcl . "\"  COMMENTS:\"" . $commentscl . "\"  SCENES:\"" . $scenescl . "\"  ALLDAY:" . $alldaycl . "  SHOWSCENES:" . $showscenescl . "  STATUS:" . $statuscl . "";
+	$logtext .= ".  USERNAME:\"" . $usernamecl . "\"  PERMISSION:\"" . $permissioncl . "\"  FIRSTNAME:\"" . $firstnamecl . "\"  LASTENAME:\"" . $lastnamecl . "\"  MOBILEPHONE:\"" . $mobilephonecl . "\"  HOMEPHONE:\"" . $homephonecl . "\"  EMAILADDR:" . $emailaddrcl "";
 }
 
 action_log($logtext);

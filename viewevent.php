@@ -48,7 +48,7 @@ if ($eid=="new") {
 	
 	if ($errorcode==0) {
 		$link = startmysql();
-		$sql = "SELECT * FROM `cal_events` WHERE `id` = " . mysql_real_escape_string(stripslashes($eid)) . " LIMIT 0, 1 ";
+		$sql = "SELECT * FROM `" . $sql_pref . "events` WHERE `id` = " . mysql_real_escape_string(stripslashes($eid)) . " LIMIT 0, 1 ";
 		$result = mysql_query($sql) or $errorcode=5;
 		
 		if ($errorcode!=5) {

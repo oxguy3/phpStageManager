@@ -63,7 +63,7 @@ require_once('header.php');
 		if ($row[6]!="") {
 			$roleids = explode(",", $row[6]);
 			for ($j=0; $j<count($roleids); $j++) {
-				$sqlr = "SELECT * FROM `" . $sql_pref . "roles` WHERE `id` = " . $roleids[$j];// . " LIMIT 0, 1 ";
+				$sqlr = "SELECT * FROM `" . $sql_pref . "roles` WHERE `id` = " . $roleids[$j];
 				$resultr = mysql_query($sqlr) or die("<span class=\"errortext\">Query failed:<br>\n" . mysql_error() . "</span>");
 				$rowr = mysql_fetch_row($resultr);
 				if ($rowr[5]!="0") {

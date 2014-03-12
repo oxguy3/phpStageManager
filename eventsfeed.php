@@ -33,13 +33,13 @@ if (isset($_GET['onlyrole'])) {
 		$usersctext .= $rowr[2];
 	}
 	
-	$userscarr = array_unique(explode(",", $usersctext));
+	$userscarr = array_unique(explode(",", $usersctext . ",0")); // ",0" added to allow scene 0 to function as a catch-all
 }
 
 $sql = "SELECT * FROM `" . $sql_pref . "events`";//" LIMIT 0, 1000 "; //1000 event limit, so that nothing explodes
 $result = mysql_query($sql) or die("Query failed:\n" . mysql_error());
 
-header('Content-type: application/json');
+//header('Content-type: application/json');
 
 echo "[";
 

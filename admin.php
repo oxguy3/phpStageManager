@@ -70,11 +70,8 @@ if ($errcode!=0) {
 	} else if ($errcode==103) {
 		echo "<span class=\"loginerror-red\">The " . $_SESSION['errnote'] . " you specified contains formatting tags.</span>";
 	} else if ($errcode==104) {
-		$selectedmode = 2;
-		echo "<span class=\"loginerror-red\">The old password you entered was incorrect.</span>";
-	} else if ($errcode==105) {
-		$selectedmode = 2;
-		echo "<span class=\"loginerror-red\">The new passwords you entered did not match.</span>";
+		$selectedmode = 1;
+		echo "<span class=\"loginerror-red\">Username not found in the database.</span>";
 	} else if ($errcode==106) {
 		echo "<span class=\"loginerror-red\">The website's database is unavailable at the moment.</span>";
 	} else if ($errcode==107) {
@@ -83,13 +80,13 @@ if ($errcode!=0) {
 		echo "<span class=\"loginerror-green\">Success!</span>"; //generic "good" message, shouldn't actually be used
 	} else if ($errcode==201) {
 		$selectedmode = 0;
-		echo "<span class=\"loginerror-green\">Your contact information has been updated.</span>";
+		echo "<span class=\"loginerror-green\">Your information has been updated.</span>";
 	} else if ($errcode==202) {
 		$selectedmode = 1;
-		echo "<span class=\"loginerror-green\">Your theme has been modified successfully.</span>";
+		echo "<span class=\"loginerror-green\">Your users have been modified successfully.</span>";
 	} else if ($errcode==203) {
 		$selectedmode = 2;
-		echo "<span class=\"loginerror-green\">Your password has been changed.</span>";
+		echo "<span class=\"loginerror-green\">Your roles have been modified successfully.</span>";
 	} else {
 		echo "<span class=\"loginerror-red\">An unknown error occurred (#" . $errcode . ")</span>";
 	}
@@ -110,6 +107,12 @@ unset($_SESSION['errcode'], $_SESSION['errnote']);
 </div>
 <div id="settingsbox">
 
+<?php
+$link = startmysql();
+$sqlUsers = "SELECT * FROM `" . $sql_pref . "users` ORDER BY `username` ASC";// . " LIMIT 0, 100 "; //this commented code would limit to 100 people
+$resultUsers = mysql_query($sqlUsers) or die("<span class=\"errortext\">User query failed:<br>\n" . mysql_error() . "</span>");
+
+?>
 
 <div id="settings-general" class="settings-divpage<?php if($_GET['mode']=="general"||!isset($_GET['mode'])){ echo ' settings-divpage-selected';} ?>">
 
@@ -161,16 +164,16 @@ unset($_SESSION['errcode'], $_SESSION['errnote']);
 
 <div id="settings-users" class="settings-divpage<?php if($_GET['mode']=="users"){ echo ' settings-divpage-selected';} ?>">
 <form action="<?php echo $siteaddr; ?>/crap/print_r.php" method="post" id="settings-users-create-form">
-<input type="hidden" name="mode" value="users-create" />
+<input type="hidden" name="u-id" value="new" />
 <div class="settings-section-header">Create a new user</div>
 <table class="settings-table"><tbody>
 <tr>
 	<td class="settings-table-label"><label for="settings-users-create-username">Username</label></td>
-	<td class="settings-table-edit"><input type="text" name="username" id="settings-users-create-username"></input></td>
+	<td class="settings-table-edit"><input type="text" name="u-username" id="settings-users-create-username"></input></td>
 </tr>
 <tr>
-	<td class="settings-table-label"><label for="settings-users-create-permission">Permission</label></td>
-	<td class="settings-table-edit"><select name="permission" id="settings-users-create-permission">
+	<td class="settings-table-label"><label for="settings-users-create-permission">Permission level</label></td>
+	<td class="settings-table-edit"><select name="u-permission" id="settings-users-create-permission">
 		<option value="0">Default</option>
 		<option value="1">Power user (can edit events)</option>
 		<option value="2">Administrator</option>
@@ -178,23 +181,23 @@ unset($_SESSION['errcode'], $_SESSION['errnote']);
 </tr>
 <tr>
 	<td class="settings-table-label"><label for="settings-users-create-firstname">First name</label></td>
-	<td class="settings-table-edit"><input type="text" name="firstname" id="settings-users-create-firstname"></input></td>
+	<td class="settings-table-edit"><input type="text" name="u-firstname" id="settings-users-create-firstname"></input></td>
 </tr>
 <tr>
 	<td class="settings-table-label"><label for="settings-users-create-lastname">Last name</label></td>
-	<td class="settings-table-edit"><input type="text" name="lastname" id="settings-users-create-lastname"></input></td>
+	<td class="settings-table-edit"><input type="text" name="u-lastname" id="settings-users-create-lastname"></input></td>
 </tr>
 <tr>
 	<td class="settings-table-label"><label for="settings-users-create-mobilephone">Mobile phone</label></td>
-	<td class="settings-table-edit"><input type="text" name="mobilephone" id="settings-users-create-mobilephone"></input></td>
+	<td class="settings-table-edit"><input type="text" name="u-mobilephone" id="settings-users-create-mobilephone"></input></td>
 </tr>
 <tr>
 	<td class="settings-table-label"><label for="settings-users-create-homephone">Home phone</label></td>
-	<td class="settings-table-edit"><input type="text" name="homephone" id="settings-users-create-homephone"></input></td>
+	<td class="settings-table-edit"><input type="text" name="u-homephone" id="settings-users-create-homephone"></input></td>
 </tr>
 <tr>
 	<td class="settings-table-label"><label for="settings-users-create-emailaddr">Email address</label></td>
-	<td class="settings-table-edit"><input type="text" name="emailaddr" id="settings-users-create-emailaddr"></input></td>
+	<td class="settings-table-edit"><input type="text" name="u-emailaddr" id="settings-users-create-emailaddr"></input></td>
 </tr>
 <tr>
 	<td class="settings-table-label"></td>
@@ -202,21 +205,33 @@ unset($_SESSION['errcode'], $_SESSION['errnote']);
 </tr>
 </tbody></table></form>
 
-<form action="<?php echo $siteaddr; ?>/crap/print_r.php" method="post" id="settings-users-edit-form">
-<input type="hidden" name="mode" value="users-edit" />
+
 <div class="settings-section-header">Edit an existing user</div>
 <table class="settings-table"><tbody>
 <tr>
     <td>To modify or delete an existing user, click the pencil next to their name in <a href="<?php echo $siteaddr; ?>/contactsheet.php">the directory</a>.</td>
+</tr>
+</tbody></table>
+
+<form action="<?php echo $siteaddr; ?>/updateuser.php" method="post" id="settings-users-resetpass-form">
+<div class="settings-section-header">Reset a user password</div>
+<input type="hidden" name="u-resetpass" value="true" />
+<table class="settings-table"><tbody>
 <tr>
-<?php /*<tr>
-	<td class="settings-table-label"><label for="settings-users-edit-bluhbluhbluh">Bluhbluhbluh</label></td>
-	<td class="settings-table-edit"><input type="text" name="bluhbluhbluh" id="settings-users-edit-bluhbluhbluh"></input></td>
+    <td colspan="2"><label for="settings-users-resetpass-username">Select the user whose password you would like to reset:</label></td>
 </tr>
 <tr>
-	<td class="settings-table-label"></td>
-	<td class="settings-table-edit settings-table-submit"><input type="submit" value="Submit"></input></td>
-</tr>*/ ?>
+    <td class="settings-table-label"><select name="u-username" id="settings-users-resetpass-username">
+        <option>Select a username</option><?php
+for($i=0; $i < mysql_num_rows($resultUsers); $i++) {
+    
+    $row = mysql_fetch_row($resultUsers);
+    echo "\n        <option>" . $row[1] . "</option>";
+}
+?>
+    </select></td>
+	<td class="settings-table-edit settings-table-submit"><input type="submit" value="Reset password"></input></td>
+</tr>
 </tbody></table></form>
 </div>
 
