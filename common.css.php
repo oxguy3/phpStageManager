@@ -372,6 +372,11 @@ ul.navbar a.adminlink:hover, ul.navbar a.adminlink:active, .adminlink#navbar-sel
 #footer a
 {
     color: <?php echo $forecolor; ?>;
+    text-decoration: none;
+}
+#footer a:hover
+{
+    text-decoration: underline;
 }
 #footer-adminlink a
 {

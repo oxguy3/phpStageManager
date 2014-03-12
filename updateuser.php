@@ -1,6 +1,8 @@
 <?php
 require_once('config.php');
 
+//die(print_r($_REQUEST));
+
 //header('Content-type: text/plain'); ////NOTE: REMOVE WHEN DONE TESTING -- WE DON'T NEED NO STINKIN' HEADERS!!
 
 function setErrcode($errcode, $scriptname, $dienow=false) {
@@ -56,7 +58,7 @@ if (isset($_POST['u-resetpass']) && $_POST['u-resetpass']=="true") {
     $logtext .= " reset " . $usernamecl . "'s password.";
     action_log($logtext);
     mysql_close($link);
-    die();
+    die("dead");
 }
 
 
@@ -73,14 +75,13 @@ if ($uidp!="new") {
 	if (!is_numeric($uidp)) {
 		die("Your user ID is not a number.");
 	}
-	if (strpos(".", $uidp)!=false||strpos("+", $uidp)!=false||strpos("-", $uidp)!=false||strpos("e", $uidp)!=false) { //i feel like SUCH a lazy programmer :P
+	if (strpos(".", $uidp)!=false||strpos("+", $uidp)!=false||strpos("-", $uidp)!=false||strpos("e", $uidp)!=false) {
 		die("Your user ID contains an invalid character.");
 	}
 	$uidcl = mysql_real_escape_string($uidp);
 }
 
 if (!isset($_POST['u-delete'])) {
-    
     
 	if (!isset($_POST['u-username'])) {
         $_SESSION['errnote'] = "username";
@@ -187,15 +188,11 @@ if (!isset($_POST['u-delete'])) {
 } else {
 	
 	
-	if ($uidp=="new") {
-		die("You can't create an event at the same time as you delete it!");
+	if ($uidp == "new") {
+		die("You can't create a user at the same time as you delete it!");
 	}
-	
-	
-	//die("not yet implemented");
 }
 
-////TODO: Add other_roles   //", `other_roles` = '0'" .
 if (isset($_POST['u-delete'])) {
 	$sql = "DELETE FROM `" . $sql_pref . "users` WHERE `id` = " . $uidcl  . ";";
 	
@@ -203,18 +200,17 @@ if (isset($_POST['u-delete'])) {
 	$sql = "UPDATE `" . $sql_pref . "users` SET `username` = '" . $usernamecl . "', `permission` = " . $permissioncl . ", `firstname` = '" . $firstnamecl . "', `lastname` = '" . $lastnamecl . "', `phone_mobile` = '" . $mobilephonecl . "', `phone_home` = '" . $homephonecl . "', `email` = '" . $emailaddrcl . "' WHERE `id` = " . $uidcl  . ";";
 	
 } else {
-	$sql = "INSERT INTO `" . $sql_pref . "events` (`username`, `permission`, `firstname`, `lastname`, `mobilephone`, `homephone`, `emailaddr`, `theme`) VALUES ('');";
+	$sql = "INSERT INTO `" . $sql_pref . "users` (`username`, `password`, `permission`, `firstname`, `lastname`, `roles`, `phone_mobile`, `phone_home`, `email`, `theme`) VALUES ('" . $usernamecl . "', 'stinger', " . $permissioncl . ", '" . $firstnamecl . "', '" . $lastnamecl . "', '0', '" . $mobilephonecl . "', '" . $homephonecl . "', '" . $emailaddrcl . "', '@');";
 	
 }
-
-
 
 mysql_query($sql) or die("Database query failed: " + mysql_error());
 mysql_close($link);
 
 
 //header("Location: " . $siteaddr . "/viewevent.php?id=" . $evidcl /*. "&errcode=201"*/);
-header("Location: " . $siteaddr . "/mastercal.php");
+header("Location: " . $siteaddr . "/contactsheet.php");
+die("test");
 
 
 
@@ -227,7 +223,7 @@ if (isset($_POST['u-delete'])) {
 	} else {
 		$logtext .= "edited user #" . $uidcl;
 	}
-	$logtext .= ".  USERNAME:\"" . $usernamecl . "\"  PERMISSION:\"" . $permissioncl . "\"  FIRSTNAME:\"" . $firstnamecl . "\"  LASTENAME:\"" . $lastnamecl . "\"  MOBILEPHONE:\"" . $mobilephonecl . "\"  HOMEPHONE:\"" . $homephonecl . "\"  EMAILADDR:" . $emailaddrcl "";
+	$logtext .= ".  USERNAME:\"" . $usernamecl . "\"  PERMISSION:\"" . $permissioncl . "\"  FIRSTNAME:\"" . $firstnamecl . "\"  LASTENAME:\"" . $lastnamecl . "\"  MOBILEPHONE:\"" . $mobilephonecl . "\"  HOMEPHONE:\"" . $homephonecl . "\"  EMAILADDR:" . $emailaddrcl;
 }
 
 action_log($logtext);

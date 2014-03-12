@@ -11,3 +11,8 @@
 2014-01-23 09:39:39 [127.0.0.1] admin (#1) logged in successfully
 2014-03-11 23:57:29 [127.0.0.1] admin (#1)  reset admin's password.
 2014-03-12 00:47:35 [127.0.0.1] admin (#1) edited event #33.  TITLE:"BE OFF BOOK"  LOC:"DAC"  DTSTART:"2014-03-05 05:00:01"  DTEND:"2014-03-05 16:59:59"  COMMENTS:""  SCENES:"0"  ALLDAY:1  SHOWSCENES:0  STATUS:2
+2014-03-12 09:04:46 [127.0.0.1] admin (#1) logged out
+2014-03-12 09:04:51 [127.0.0.1] admin failed to login (wrong password)
+2014-03-12 09:04:57 [127.0.0.1] admin failed to login (wrong password)
+2014-03-12 09:05:12 [127.0.0.1] admin (#1) initialized their password
+2014-03-12 09:05:17 [127.0.0.1] admin (#1) logged in successfully

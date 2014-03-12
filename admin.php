@@ -99,10 +99,10 @@ unset($_SESSION['errcode'], $_SESSION['errnote']);
 ?>
 <div id="leftbar">
 <ul id="leftbar-list">
-	<li id="leftbar-li-general"><span id="leftbar-a-general"<?php if($_GET['mode']=="general"||!isset($_GET['mode'])){ echo ' class="leftbarselected"';} ?> showdiv="settings-general">General</span></li>
-	<li id="leftbar-li-users"><span id="leftbar-a-users"<?php if($_GET['mode']=="users"){ echo ' class="leftbarselected"';} ?> showdiv="settings-users">Users</span></li>
+	<!--<li id="leftbar-li-general"><span id="leftbar-a-general"<?php if($_GET['mode']=="general"||!isset($_GET['mode'])){ echo ' class="leftbarselected"';} ?> showdiv="settings-general">General</span></li>-->
+	<li id="leftbar-li-users"><span id="leftbar-a-users"<?php if($_GET['mode']=="users"||!isset($_GET['mode'])){ echo ' class="leftbarselected"';} ?> showdiv="settings-users">Users</span></li>
 	<li id="leftbar-li-roles"><span id="leftbar-a-roles"<?php if($_GET['mode']=="roles"){ echo ' class="leftbarselected"';} ?> showdiv="settings-roles">Roles</span></li>
-	<li id="leftbar-li-security"><span id="leftbar-a-security"<?php if($_GET['mode']=="security"){ echo ' class="leftbarselected"';} ?> showdiv="settings-security">Security</span></li>
+	<!--<li id="leftbar-li-security"><span id="leftbar-a-security"<?php if($_GET['mode']=="security"){ echo ' class="leftbarselected"';} ?> showdiv="settings-security">Security</span></li>-->
 </ul>
 </div>
 <div id="settingsbox">
@@ -112,8 +112,12 @@ $link = startmysql();
 $sqlUsers = "SELECT * FROM `" . $sql_pref . "users` ORDER BY `username` ASC";// . " LIMIT 0, 100 "; //this commented code would limit to 100 people
 $resultUsers = mysql_query($sqlUsers) or die("<span class=\"errortext\">User query failed:<br>\n" . mysql_error() . "</span>");
 
+$sqlRoles = "SELECT * FROM `" . $sql_pref . "roles` ORDER BY `title` ASC";// . " LIMIT 0, 100 "; //this commented code would limit to 100 people
+$resultRoles = mysql_query($sqlRoles) or die("<span class=\"errortext\">Role query failed:<br>\n" . mysql_error() . "</span>");
+
 ?>
 
+<!--
 <div id="settings-general" class="settings-divpage<?php if($_GET['mode']=="general"||!isset($_GET['mode'])){ echo ' settings-divpage-selected';} ?>">
 
 <form action="<?php echo $siteaddr; ?>/crap/print_r.php" method="post" id="settings-general-general-form">
@@ -160,10 +164,10 @@ $resultUsers = mysql_query($sqlUsers) or die("<span class=\"errortext\">User que
 </tr>
 </tbody></table></form>
 </div>
+-->
 
-
-<div id="settings-users" class="settings-divpage<?php if($_GET['mode']=="users"){ echo ' settings-divpage-selected';} ?>">
-<form action="<?php echo $siteaddr; ?>/crap/print_r.php" method="post" id="settings-users-create-form">
+<div id="settings-users" class="settings-divpage<?php if($_GET['mode']=="users"||!isset($_GET['mode'])){ echo ' settings-divpage-selected';} ?>">
+<form action="<?php echo $siteaddr; ?>/updateuser.php" method="post" id="settings-users-create-form">
 <input type="hidden" name="u-id" value="new" />
 <div class="settings-section-header">Create a new user</div>
 <table class="settings-table"><tbody>
@@ -206,13 +210,31 @@ $resultUsers = mysql_query($sqlUsers) or die("<span class=\"errortext\">User que
 </tbody></table></form>
 
 
+<form action="<?php echo $siteaddr; ?>/edituser.php" method="get" id="settings-users-edit-form">
 <div class="settings-section-header">Edit an existing user</div>
 <table class="settings-table"><tbody>
 <tr>
-    <td>To modify or delete an existing user, click the pencil next to their name in <a href="<?php echo $siteaddr; ?>/contactsheet.php">the directory</a>.</td>
+    <td colspan="2"><label for="settings-users-edit-id">Select the user who you would like to edit:</label></td>
 </tr>
-</tbody></table>
+<tr>
+    <td class="settings-table-label"><select name="id" id="settings-users-edit-id">
+        <option>Select a username</option><?php
+for($i=0; $i < mysql_num_rows($resultUsers); $i++) {
+    
+    $row = mysql_fetch_row($resultUsers);
+    echo "\n        <option value=\"" . $row[0] . "\">" . $row[1] . "</option>";
+}
+?>
+    </select></td>
+	<td class="settings-table-edit settings-table-submit"><input type="submit" value="Edit user"></input></td>
+</tr>
+</tbody></table></form>
 
+
+
+<?php
+$resultUsers2 = mysql_query($sqlUsers) or die("<span class=\"errortext\">User query failed:<br>\n" . mysql_error() . "</span>");
+?>
 <form action="<?php echo $siteaddr; ?>/updateuser.php" method="post" id="settings-users-resetpass-form">
 <div class="settings-section-header">Reset a user password</div>
 <input type="hidden" name="u-resetpass" value="true" />
@@ -223,9 +245,9 @@ $resultUsers = mysql_query($sqlUsers) or die("<span class=\"errortext\">User que
 <tr>
     <td class="settings-table-label"><select name="u-username" id="settings-users-resetpass-username">
         <option>Select a username</option><?php
-for($i=0; $i < mysql_num_rows($resultUsers); $i++) {
+for($i=0; $i < mysql_num_rows($resultUsers2); $i++) {
     
-    $row = mysql_fetch_row($resultUsers);
+    $row = mysql_fetch_row($resultUsers2);
     echo "\n        <option>" . $row[1] . "</option>";
 }
 ?>
@@ -233,31 +255,130 @@ for($i=0; $i < mysql_num_rows($resultUsers); $i++) {
 	<td class="settings-table-edit settings-table-submit"><input type="submit" value="Reset password"></input></td>
 </tr>
 </tbody></table></form>
+
+
+
+
+<?php
+$resultUsers3 = mysql_query($sqlUsers) or die("<span class=\"errortext\">User query failed:<br>\n" . mysql_error() . "</span>");
+?>
+<form action="<?php echo $siteaddr; ?>/updateuser.php" method="post" id="settings-users-delete-form">
+<div class="settings-section-header">Delete a user </div>
+<input type="hidden" name="u-delete" value="true" />
+<table class="settings-table"><tbody>
+<tr>
+    <td colspan="2"><label for="settings-users-delete-username">Select the user who you would like to delete:</label></td>
+</tr>
+<tr>
+    <td class="settings-table-label"><select name="u-id" id="settings-users-delete-id">
+        <option>Select a username</option><?php
+for($i=0; $i < mysql_num_rows($resultUsers3); $i++) {
+    
+    $row = mysql_fetch_row($resultUsers3);
+    echo "\n        <option value=\"" . $row[0] . "\">" . $row[1] . "</option>";
+}
+?>
+    </select></td>
+	<td class="settings-table-edit settings-table-submit"><input type="submit" value="Delete user"></input></td>
+</tr>
+</tbody></table></form>
 </div>
 
 
 <div id="settings-roles" class="settings-divpage<?php if($_GET['mode']=="roles"){ echo ' settings-divpage-selected';} ?>">
-<form action="<?php echo $siteaddr; ?>/crap/print_r.php" method="post" id="settings-roles-form">
-<input type="hidden" name="mode" value="roles" />
+<form action="<?php echo $siteaddr; ?>/updaterole.php" method="post" id="settings-roles-create-form">
+<input type="hidden" name="u-id" value="new" />
+<div class="settings-section-header">Create a new role</div>
 <table class="settings-table"><tbody>
 <tr>
-	<td class="settings-table-label"><label for="settings-roles-oldpassword">Old password</label></td>
-	<td class="settings-table-edit"><input type="password" name="oldpassword" id="settings-roles-oldpassword" value=""></input></td>
+	<td class="settings-table-label"><label for="settings-roles-create-title">Name</label></td>
+	<td class="settings-table-edit"><input type="text" name="u-title" id="settings-roles-create-title"></input></td>
 </tr>
 <tr>
-	<td class="settings-table-label"><label for="settings-roles-newpassword">New password</label></td>
-	<td class="settings-table-edit"><input type="password" name="newpassword" id="settings-roles-newpassword" value=""></input></td>
+	<td class="settings-table-label"><label for="settings-roles-create-scenes">Scenes</label></td>
+	<td class="settings-table-edit"><input type="text" name="u-scenes" id="settings-roles-create-scenes"></input> (comma separated list, no spaces)</td>
 </tr>
 <tr>
-	<td class="settings-table-label"><label for="settings-roles-confirmpassword">Confirm new password</label></td>
-	<td class="settings-table-edit"><input type="password" name="confirmpassword" id="settings-roles-confirmpassword" value=""></input></td>
+	<td class="settings-table-label"><label for="settings-roles-create-roletype">Role type</label></td>
+	<td class="settings-table-edit"><select name="u-roletype" id="settings-roles-create-roletype">
+		<option value="1">Cast</option>
+		<option value="2">Crew</option>
+	</select></td>
+</tr>
+<tr>
+	<td class="settings-table-label"><label for="settings-roles-create-showinscenes">Show in scene breakdown?</label></td>
+	<td class="settings-table-edit"><select name="u-showinscenes" id="settings-roles-create-showinscenes">
+		<option value="1">Yes</option>
+		<option value="0">No</option>
+	</select></td>
+</tr>
+<tr>
+	<td class="settings-table-label"><label for="settings-roles-create-showindirectory">Show in directory?</label></td>
+	<td class="settings-table-edit"><select name="u-showindirectory" id="settings-roles-create-showindirectory">
+		<option value="1">Yes</option>
+		<option value="0">No</option>
+	</select></td>
+</tr>
+<tr>
+	<td class="settings-table-label"><label for="settings-roles-create-showincaldropdown">Show in calendar dropdown?</label></td>
+	<td class="settings-table-edit"><select name="u-showincaldropdown" id="settings-roles-create-showincaldropdown">
+		<option value="1">Yes</option>
+		<option value="0">No</option>
+	</select></td>
 </tr>
 <tr>
 	<td class="settings-table-label"></td>
-	<td class="settings-table-edit settings-table-submit"><input type="submit" value="Save"></input></td>
+	<td class="settings-table-edit settings-table-submit"><input type="submit" value="Create"></input></td>
 </tr>
-</tbody></table>
-</form>
+</tbody></table></form>
+
+
+<form action="<?php echo $siteaddr; ?>/editrole.php" method="get" id="settings-roles-edit-form">
+<div class="settings-section-header">Edit an existing role</div>
+<table class="settings-table"><tbody>
+<tr>
+    <td colspan="2"><label for="settings-roles-edit-id">Select the role that you would like to edit:</label></td>
+</tr>
+<tr>
+    <td class="settings-table-label"><select name="id" id="settings-roles-edit-id">
+        <option>Select a role</option><?php
+for($i=0; $i < mysql_num_rows($resultRoles); $i++) {
+    
+    $row = mysql_fetch_row($resultRoles);
+    echo "\n        <option value=\"" . $row[0] . "\">" . $row[1] . "</option>";
+}
+?>
+    </select></td>
+	<td class="settings-table-edit settings-table-submit"><input type="submit" value="Edit role"></input></td>
+</tr>
+</tbody></table></form>
+
+
+
+
+<?php
+$resultRoles3 = mysql_query($sqlRoles) or die("<span class=\"errortext\">User query failed:<br>\n" . mysql_error() . "</span>");
+?>
+<form action="<?php echo $siteaddr; ?>/updaterole.php" method="post" id="settings-roles-delete-form">
+<div class="settings-section-header">Delete a role</div>
+<input type="hidden" name="u-delete" value="true" />
+<table class="settings-table"><tbody>
+<tr>
+    <td colspan="2"><label for="settings-users-delete-id">Select the role that you would like to delete:</label></td>
+</tr>
+<tr>
+    <td class="settings-table-label"><select name="u-id" id="settings-roles-delete-id">
+        <option>Select a role</option><?php
+for($i=0; $i < mysql_num_rows($resultRoles3); $i++) {
+    
+    $row = mysql_fetch_row($resultRoles3);
+    echo "\n        <option value=\"" . $row[0] . "\">" . $row[1] . "</option>";
+}
+?>
+    </select></td>
+	<td class="settings-table-edit settings-table-submit"><input type="submit" value="Delete role"></input></td>
+</tr>
+</tbody></table></form>
 </div>
 
 
